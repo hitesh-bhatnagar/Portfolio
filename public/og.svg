@@ -1,0 +1,10 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#050816"/>
+  <circle cx="1020" cy="120" r="220" fill="#6D5EFC" opacity=".32"/>
+  <circle cx="190" cy="520" r="250" fill="#00E5FF" opacity=".18"/>
+  <circle cx="770" cy="500" r="190" fill="#FF46AA" opacity=".13"/>
+  <path d="M100 118h1000v394H100z" fill="white" opacity=".045"/>
+  <text x="100" y="260" fill="white" font-size="76" font-family="Inter, Arial" font-weight="800">Hitesh Bhatnagar</text>
+  <text x="104" y="330" fill="#A7B0D9" font-size="34" font-family="Inter, Arial" font-weight="500">AI Systems • Embedded RTOS • DSP • Audit Automation</text>
+  <text x="104" y="416" fill="#00E5FF" font-size="28" font-family="Inter, Arial" font-weight="700">Local AI + Low-Level Systems Portfolio</text>
+</svg>
