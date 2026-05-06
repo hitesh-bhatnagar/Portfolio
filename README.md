@@ -1,18 +1,25 @@
-# Hitesh Bhatnagar — Premium WebGL Portfolio
+# Hitesh Bhatnagar —  Portfolio
 
-A premium recruiter-facing portfolio built with React, Vite, Tailwind CSS, Framer Motion, Lenis smooth scroll, and React Three Fiber WebGL.
+A personal portfolio built with React, Vite, Tailwind CSS, Framer Motion, Lenis smooth scrolling, and React Three Fiber. Designed to present projects, skills, research, and contact details in a polished, recruiter-friendly experience.
 
-## Features
+## Highlights
 
-- Premium dark glassmorphism interface
-- JetBrains Mono typography
-- Interactive WebGL 3D hero scene
+- Dark glassmorphism UI with modern visual depth
+- JetBrains Mono-inspired typography
+- Interactive WebGL 3D hero experience
 - Mouse-reactive spotlight and 3D tilt cards
 - Smooth scrolling with Lenis
-- Project filtering
+- Project filtering and polished content sections
 - Resume download
-- GitHub, LinkedIn, email, and phone CTA links
-- Vercel, Netlify, and GitHub Pages deployment config
+- Social/contact CTAs for GitHub, LinkedIn, email, and phone
+- Free deployment support for Vercel, Netlify, and GitHub Pages
+
+## Live Demo
+
+View the deployed portfolio here:
+
+**[Open Live Site](https://portfolio-1vzjee3wn-hitesh-bhatnagars-projects.vercel.app/)**
+
 
 ## Run locally
 
