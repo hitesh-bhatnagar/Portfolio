@@ -18,7 +18,7 @@ A personal portfolio built with React, Vite, Tailwind CSS, Framer Motion, Lenis 
 
 View the deployed portfolio here:
 
-**[Open Live Site](https://portfolio-1vzjee3wn-hitesh-bhatnagars-projects.vercel.app/)**
+**[Open Live Site](portfolio-pi-dusky-81.vercel.app)**
 
 
 ## Run locally
