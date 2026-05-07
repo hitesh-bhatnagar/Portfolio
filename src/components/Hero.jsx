@@ -4,7 +4,7 @@ import { Sparkles, ArrowUpRight, Mail, GraduationCap, BadgeCheck, BriefcaseBusin
 import { profile, metrics } from '../data/portfolio';
 import WebGLScene from './WebGLScene';
 
-const typewriterTexts = ['AI Systems Engineer', 'C++ Engine Builder', 'DSP Researcher', 'Embedded Developer', 'Rust Enthusiast'];
+const typewriterTexts = ['AI Systems Engineer', 'ML Researcher', 'System programming Enthusiast'];
 
 function useTypewriter(texts, speed = 80, pause = 2000) {
   const [display, setDisplay] = useState('');
@@ -125,8 +125,14 @@ function MiniStat({ icon: Icon, label, value }) {
   return (
     <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 backdrop-blur">
       <Icon className="mb-2 text-violet-400" size={16} />
-      <div className="text-[0.7rem] uppercase tracking-[0.2em] text-slate-600">{label}</div>
-      <div className="mt-1 text-base font-semibold text-slate-200">{value}</div>
+      
+      <div className="text-[0.7rem] uppercase tracking-[0.2em] text-white">
+        {label}
+      </div>
+
+      <div className="mt-1 text-base font-semibold text-white">
+        {value}
+      </div>
     </div>
   );
 }
