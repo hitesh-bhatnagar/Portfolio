@@ -4,9 +4,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        sans: ['Plus Jakarta Sans', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
         mono: ['JetBrains Mono', 'SF Mono', 'Fira Code', 'monospace'],
-        display: ['Inter', '-apple-system', 'sans-serif'],
+        display: ['Plus Jakarta Sans', 'Inter', '-apple-system', 'sans-serif'],
       },
       colors: {
         brand: {
@@ -17,6 +17,11 @@ export default {
           400: '#38bdf8',
           500: '#0ea5e9',
           600: '#0284c7',
+        },
+        void: {
+          950: '#06080e',
+          900: '#0a0e17',
+          800: '#111726',
         },
       },
     },

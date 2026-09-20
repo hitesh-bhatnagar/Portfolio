@@ -13,7 +13,7 @@ class SpaceCanvasErrorBoundary extends Component {
   }
 
   componentDidCatch(err) {
-    console.warn('SpaceCanvas encountered an error, degrading gracefully:', err);
+    console.warn('SpaceCanvas degraded gracefully:', err);
   }
 
   render() {
@@ -22,9 +22,9 @@ class SpaceCanvasErrorBoundary extends Component {
   }
 }
 
-function Starfield() {
+function Starfield({ isMobile }) {
   const pointsRef = useRef();
-  const count = 1200;
+  const count = isMobile ? 450 : 1000;
 
   const [positions, colors] = useMemo(() => {
     const pos = new Float32Array(count * 3);
@@ -33,14 +33,13 @@ function Starfield() {
     const palette = [
       new THREE.Color('#ffffff'),
       new THREE.Color('#7dd3fc'),
-      new THREE.Color('#a5b4fc'),
+      new THREE.Color('#93c5fd'),
       new THREE.Color('#c084fc'),
       new THREE.Color('#38bdf8'),
     ];
 
     for (let i = 0; i < count; i++) {
-      // Distribute stars in deep 3D volume
-      const r = THREE.MathUtils.randFloat(15, 65);
+      const r = THREE.MathUtils.randFloat(15, 60);
       const theta = THREE.MathUtils.randFloat(0, Math.PI * 2);
       const phi = Math.acos(THREE.MathUtils.randFloatSpread(2));
 
@@ -59,24 +58,23 @@ function Starfield() {
 
   useFrame((state, delta) => {
     if (!pointsRef.current) return;
+    pointsRef.current.rotation.y += delta * 0.012;
+    pointsRef.current.rotation.x += delta * 0.006;
 
-    // Gentle continuous cosmic drift
-    pointsRef.current.rotation.y += delta * 0.015;
-    pointsRef.current.rotation.x += delta * 0.008;
-
-    // Smooth subtle mouse parallax
-    const targetX = state.pointer.x * 0.12;
-    const targetY = state.pointer.y * 0.08;
-    pointsRef.current.position.x = THREE.MathUtils.lerp(
-      pointsRef.current.position.x,
-      targetX,
-      delta * 2
-    );
-    pointsRef.current.position.y = THREE.MathUtils.lerp(
-      pointsRef.current.position.y,
-      targetY,
-      delta * 2
-    );
+    if (!isMobile) {
+      const targetX = state.pointer.x * 0.08;
+      const targetY = state.pointer.y * 0.05;
+      pointsRef.current.position.x = THREE.MathUtils.lerp(
+        pointsRef.current.position.x,
+        targetX,
+        delta * 2
+      );
+      pointsRef.current.position.y = THREE.MathUtils.lerp(
+        pointsRef.current.position.y,
+        targetY,
+        delta * 2
+      );
+    }
   });
 
   return (
@@ -86,10 +84,10 @@ function Starfield() {
         <bufferAttribute attach="attributes-color" args={[colors, 3]} />
       </bufferGeometry>
       <pointsMaterial
-        size={0.12}
+        size={isMobile ? 0.09 : 0.11}
         vertexColors
         transparent
-        opacity={0.85}
+        opacity={0.75}
         sizeAttenuation
         depthWrite={false}
       />
@@ -114,10 +112,16 @@ function checkWebGLSupport() {
 export default function SpaceCanvas() {
   const [mounted, setMounted] = useState(false);
   const [supported, setSupported] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setMounted(true);
     setSupported(checkWebGLSupport());
+    setIsMobile(window.innerWidth < 768);
+
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   if (!mounted || !supported) {
@@ -126,10 +130,10 @@ export default function SpaceCanvas() {
 
   return (
     <SpaceCanvasErrorBoundary>
-      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden opacity-75">
+      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden opacity-60">
         <Canvas
           dpr={[1, 1.5]}
-          camera={{ position: [0, 0, 30], fov: 60 }}
+          camera={{ position: [0, 0, 28], fov: 60 }}
           gl={{
             antialias: false,
             alpha: true,
@@ -137,7 +141,7 @@ export default function SpaceCanvas() {
           }}
         >
           <Suspense fallback={null}>
-            <Starfield />
+            <Starfield isMobile={isMobile} />
           </Suspense>
         </Canvas>
       </div>

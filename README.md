@@ -23,12 +23,17 @@ View the deployed portfolio here:
 
 ## Run locally
 
+Using the portable Node runtime in `.tools/`:
+
 ```bash
-npm install
+# 1. Add local tools to PATH
+export PATH="$PWD/.tools/bin:$PATH"
+
+# 2. Run the dev server
 npm run dev
 ```
 
-Open the local URL shown by Vite.
+Open the local URL shown by Vite (typically `http://localhost:5173`).
 
 ## Build
 

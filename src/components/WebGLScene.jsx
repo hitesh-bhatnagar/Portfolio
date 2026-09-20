@@ -2,7 +2,7 @@ import React, { Suspense, useMemo, useRef, useState, useEffect, Component } from
 import * as THREE from 'three';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
-import { RotateCw, Compass } from 'lucide-react';
+import { RotateCw, Move, Sparkles } from 'lucide-react';
 
 class SceneErrorBoundary extends Component {
   constructor(props) {
@@ -28,10 +28,12 @@ class SceneErrorBoundary extends Component {
 
 function FallbackVisual() {
   return (
-    <div className="relative flex h-full w-full items-center justify-center">
+    <div className="relative flex h-full w-full items-center justify-center bg-[#070a12] select-none">
       <div className="relative flex h-64 w-64 items-center justify-center">
         <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-amber-500/20 via-sky-500/20 to-purple-500/15 blur-3xl animate-pulse" />
-        <div className="relative h-28 w-28 rounded-full border border-amber-400/40 bg-gradient-to-br from-amber-500/40 via-sky-500/30 to-black shadow-[0_0_50px_rgba(245,158,11,0.5)]" />
+        <div className="relative h-28 w-28 rounded-full border border-amber-400/40 bg-gradient-to-br from-amber-500/40 via-sky-500/30 to-black shadow-[0_0_50px_rgba(245,158,11,0.5)] flex items-center justify-center">
+          <Sparkles className="text-amber-300" size={24} />
+        </div>
         <div className="absolute h-48 w-48 rounded-full border border-sky-400/30 border-dashed" style={{ transform: 'rotateX(70deg)' }} />
         <div className="absolute h-64 w-64 rounded-full border border-amber-400/25" style={{ transform: 'rotateX(70deg)' }} />
       </div>
@@ -42,14 +44,13 @@ function FallbackVisual() {
 // ─────────────────────────────────────────────────────────────────────────────
 // ASTEROID BELT PARTICLES
 // ─────────────────────────────────────────────────────────────────────────────
-function AsteroidBelt() {
+function AsteroidBelt({ count = 360 }) {
   const ref = useRef();
-  const count = 420;
 
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      const r = THREE.MathUtils.randFloat(2.85, 3.18);
+      const r = THREE.MathUtils.randFloat(2.8, 3.15);
       const theta = Math.random() * Math.PI * 2;
       const y = THREE.MathUtils.randFloatSpread(0.18);
 
@@ -62,7 +63,7 @@ function AsteroidBelt() {
 
   useFrame((state, delta) => {
     if (!ref.current) return;
-    ref.current.rotation.y += delta * 0.05;
+    ref.current.rotation.y += delta * 0.04;
   });
 
   return (
@@ -71,10 +72,10 @@ function AsteroidBelt() {
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
       <pointsMaterial
-        size={0.02}
+        size={0.022}
         color="#cbd5e1"
         transparent
-        opacity={0.5}
+        opacity={0.45}
         sizeAttenuation
         depthWrite={false}
       />
@@ -88,16 +89,16 @@ function AsteroidBelt() {
 function OrbitTrack({ radius, color = '#38bdf8', opacity = 0.18 }) {
   return (
     <mesh rotation={[Math.PI / 2, 0, 0]}>
-      <ringGeometry args={[radius - 0.006, radius + 0.006, 128]} />
+      <ringGeometry args={[radius - 0.005, radius + 0.005, 96]} />
       <meshBasicMaterial color={color} transparent opacity={opacity} side={THREE.DoubleSide} />
     </mesh>
   );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// THE SOLAR SYSTEM (CENTRAL SUN + 4 PLANETS WITH REVOLUTION & SATURN RINGS)
+// SOLAR SYSTEM CORE (Central Sun + 4 Technical Pillars)
 // ─────────────────────────────────────────────────────────────────────────────
-function SolarSystemCore() {
+function SolarSystemCore({ isMobile }) {
   const sunRef = useRef();
   const coronaRef = useRef();
 
@@ -116,73 +117,73 @@ function SolarSystemCore() {
 
     // Sun pulsation & rotation
     if (sunRef.current) {
-      sunRef.current.rotation.y += delta * 0.25;
+      sunRef.current.rotation.y += delta * 0.22;
     }
     if (coronaRef.current) {
-      coronaRef.current.rotation.y -= delta * 0.18;
-      coronaRef.current.rotation.z += delta * 0.12;
+      coronaRef.current.rotation.y -= delta * 0.15;
+      coronaRef.current.rotation.z += delta * 0.1;
     }
 
     // Planet 1: Jarvis C++ Inference Engine (Fast inner orbit)
     if (p1Pivot.current) {
-      p1Pivot.current.rotation.y += delta * 0.95;
+      p1Pivot.current.rotation.y += delta * 0.85;
     }
 
     // Planet 2: DSP Signal Processing (Earth-like orbit + Moon)
     if (p2Pivot.current) {
-      p2Pivot.current.rotation.y += delta * 0.65;
+      p2Pivot.current.rotation.y += delta * 0.58;
     }
     if (moonRef.current) {
-      moonRef.current.position.x = Math.cos(t * 3.5) * 0.28;
-      moonRef.current.position.z = Math.sin(t * 3.5) * 0.28;
+      moonRef.current.position.x = Math.cos(t * 3.2) * 0.26;
+      moonRef.current.position.z = Math.sin(t * 3.2) * 0.26;
     }
 
     // Planet 3: RTOS Simulator (Saturn-like Ringed Giant)
     if (p3Pivot.current) {
-      p3Pivot.current.rotation.y += delta * 0.42;
+      p3Pivot.current.rotation.y += delta * 0.38;
     }
     if (saturnRingRef.current) {
-      saturnRingRef.current.rotation.z += delta * 0.3;
+      saturnRingRef.current.rotation.z += delta * 0.25;
     }
 
     // Planet 4: Enterprise Audit / Security (Outer Sentry)
     if (p4Pivot.current) {
-      p4Pivot.current.rotation.y += delta * 0.26;
+      p4Pivot.current.rotation.y += delta * 0.22;
     }
   });
 
   return (
-    <group rotation={[0.42, 0, 0]}>
-      {/* ─── 1. CENTRAL SUN (QUANTUM STELLAR CORE) ─── */}
+    <group rotation={[0.38, 0, 0]}>
+      {/* ─── 1. CENTRAL QUANTUM CORE (SUN) ─── */}
       <mesh ref={sunRef}>
-        <sphereGeometry args={[0.72, 32, 32]} />
+        <sphereGeometry args={[0.7, 32, 32]} />
         <meshStandardMaterial
           color="#0f172a"
           emissive="#f59e0b"
-          emissiveIntensity={2.2}
+          emissiveIntensity={2.0}
           roughness={0.2}
           metalness={0.8}
         />
       </mesh>
 
       {/* Sun Coronal Geodesic Wireframe */}
-      <mesh ref={coronaRef} scale={1.22}>
-        <icosahedronGeometry args={[0.72, 2]} />
-        <meshBasicMaterial color="#fbbf24" wireframe transparent opacity={0.35} />
+      <mesh ref={coronaRef} scale={1.2}>
+        <icosahedronGeometry args={[0.7, 2]} />
+        <meshBasicMaterial color="#fbbf24" wireframe transparent opacity={0.3} />
       </mesh>
 
       {/* ─── 2. ORBIT TRACK LINES ─── */}
-      <OrbitTrack radius={1.5} color="#38bdf8" opacity={0.22} />
-      <OrbitTrack radius={2.3} color="#60a5fa" opacity={0.2} />
-      <OrbitTrack radius={3.4} color="#fbbf24" opacity={0.22} />
-      <OrbitTrack radius={4.4} color="#c084fc" opacity={0.2} />
+      <OrbitTrack radius={1.45} color="#38bdf8" opacity={0.22} />
+      <OrbitTrack radius={2.25} color="#60a5fa" opacity={0.2} />
+      <OrbitTrack radius={3.35} color="#fbbf24" opacity={0.22} />
+      <OrbitTrack radius={4.35} color="#c084fc" opacity={0.2} />
 
       {/* Asteroid Belt */}
-      <AsteroidBelt />
+      <AsteroidBelt count={isMobile ? 180 : 360} />
 
-      {/* ─── 3. PLANET 1: INFERENCE ENGINE (METALLIC CYAN) ─── */}
+      {/* ─── 3. PLANET 1: C++ INFERENCE ENGINE (CYAN) ─── */}
       <group ref={p1Pivot}>
-        <group position={[1.5, 0, 0]}>
+        <group position={[1.45, 0, 0]}>
           <mesh>
             <sphereGeometry args={[0.11, 24, 24]} />
             <meshStandardMaterial
@@ -198,7 +199,7 @@ function SolarSystemCore() {
 
       {/* ─── 4. PLANET 2: DSP SIGNAL RESEARCH (OCEANIC + MOON) ─── */}
       <group ref={p2Pivot}>
-        <group position={[2.3, 0, 0]}>
+        <group position={[2.25, 0, 0]}>
           <mesh>
             <sphereGeometry args={[0.15, 24, 24]} />
             <meshStandardMaterial
@@ -219,9 +220,9 @@ function SolarSystemCore() {
 
       {/* ─── 5. PLANET 3: RTOS KERNEL (SATURN-STYLE RINGED GIANT) ─── */}
       <group ref={p3Pivot}>
-        <group position={[3.4, 0, 0]}>
+        <group position={[3.35, 0, 0]}>
           <mesh>
-            <sphereGeometry args={[0.22, 28, 28]} />
+            <sphereGeometry args={[0.21, 28, 28]} />
             <meshStandardMaterial
               color="#d97706"
               emissive="#f59e0b"
@@ -234,25 +235,25 @@ function SolarSystemCore() {
           {/* Saturn's Tilted Particle Rings */}
           <group ref={saturnRingRef} rotation={[0.7, 0.3, 0]}>
             <mesh>
-              <ringGeometry args={[0.3, 0.52, 64]} />
+              <ringGeometry args={[0.28, 0.48, 64]} />
               <meshStandardMaterial
                 color="#fbbf24"
                 emissive="#f59e0b"
-                emissiveIntensity={0.4}
+                emissiveIntensity={0.35}
                 side={THREE.DoubleSide}
                 transparent
-                opacity={0.65}
+                opacity={0.6}
               />
             </mesh>
           </group>
         </group>
       </group>
 
-      {/* ─── 6. PLANET 4: ENTERPRISE AUDIT & CRYPTO (STELLAR VIOLET) ─── */}
+      {/* ─── 6. PLANET 4: ENTERPRISE AUDIT & SECURITY (STELLAR VIOLET) ─── */}
       <group ref={p4Pivot}>
-        <group position={[4.4, 0, 0]}>
+        <group position={[4.35, 0, 0]}>
           <mesh>
-            <sphereGeometry args={[0.14, 24, 24]} />
+            <sphereGeometry args={[0.13, 24, 24]} />
             <meshStandardMaterial
               color="#9333ea"
               emissive="#a855f7"
@@ -268,25 +269,25 @@ function SolarSystemCore() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// CAMERA RIG WITH SMOOTH MOUSE TILT & SCROLL REACTION
+// CAMERA RIG WITH SMOOTH MOUSE TILT
 // ─────────────────────────────────────────────────────────────────────────────
-function CameraRig() {
+function CameraRig({ isMobile }) {
   const group = useRef();
 
   useFrame((state, delta) => {
-    if (!group.current) return;
+    if (!group.current || isMobile) return;
 
-    // Smooth subtle mouse tilt
-    const targetY = state.pointer.x * 0.22;
-    const targetX = -state.pointer.y * 0.15;
+    // Smooth subtle mouse tilt on desktop
+    const targetY = state.pointer.x * 0.18;
+    const targetX = -state.pointer.y * 0.12;
 
-    group.current.rotation.y = THREE.MathUtils.lerp(group.current.rotation.y, targetY, delta * 2.5);
-    group.current.rotation.x = THREE.MathUtils.lerp(group.current.rotation.x, targetX, delta * 2.5);
+    group.current.rotation.y = THREE.MathUtils.lerp(group.current.rotation.y, targetY, delta * 2.2);
+    group.current.rotation.x = THREE.MathUtils.lerp(group.current.rotation.x, targetX, delta * 2.2);
   });
 
   return (
     <group ref={group}>
-      <SolarSystemCore />
+      <SolarSystemCore isMobile={isMobile} />
     </group>
   );
 }
@@ -297,8 +298,9 @@ function checkWebGLSupport() {
     if (typeof window.ResizeObserver === 'undefined') return false;
     if (!window.WebGLRenderingContext) return false;
     const canvas = document.createElement('canvas');
-    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-    return Boolean(gl);
+    return Boolean(
+      canvas.getContext('webgl') || canvas.getContext('experimental-webgl')
+    );
   } catch (e) {
     return false;
   }
@@ -307,10 +309,17 @@ function checkWebGLSupport() {
 export default function WebGLScene() {
   const [supported, setSupported] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [touchInteractive, setTouchInteractive] = useState(false);
 
   useEffect(() => {
     setMounted(true);
     setSupported(checkWebGLSupport());
+    setIsMobile(window.innerWidth < 1024);
+
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   if (!mounted || !supported) {
@@ -319,42 +328,61 @@ export default function WebGLScene() {
 
   return (
     <SceneErrorBoundary fallback={<FallbackVisual />}>
-      <div className="relative h-full w-full overflow-hidden bg-black select-none cursor-grab active:cursor-grabbing">
+      <div className="relative h-full w-full overflow-hidden bg-[#070a12] select-none">
         {/* Orbital Telemetry Badge */}
-        <div className="pointer-events-none absolute bottom-3 right-3 z-20 flex items-center gap-2 rounded-full border border-amber-500/30 bg-black/80 px-3 py-1 text-[11px] font-mono text-amber-300 backdrop-blur-md">
-          <RotateCw size={12} className="animate-spin text-amber-400" style={{ animationDuration: '8s' }} />
-          <span>SOLAR SYSTEM // DRAG TO ROTATE ORBIT</span>
+        <div className="pointer-events-none absolute bottom-3 right-3 z-20 flex items-center gap-2 rounded-full border border-amber-500/25 bg-black/80 px-3 py-1 text-[11px] font-mono text-amber-300 backdrop-blur-md">
+          <RotateCw size={11} className="animate-spin text-amber-400" style={{ animationDuration: '9s' }} />
+          <span>ORBITAL TELEMETRY ACTIVE</span>
         </div>
 
-        <Canvas
-          dpr={[1, 1.5]}
-          camera={{ position: [0, 2.2, 7.8], fov: 42 }}
-          gl={{
-            antialias: true,
-            alpha: true,
-            powerPreference: 'high-performance',
-          }}
-        >
-          <Suspense fallback={<FallbackVisual />}>
-            {/* Solar system lighting */}
-            <ambientLight intensity={0.45} />
-            <pointLight position={[0, 0, 0]} intensity={7.0} color="#fbbf24" distance={15} decay={2} />
-            <pointLight position={[8, 5, 8]} intensity={2.5} color="#38bdf8" />
-            <pointLight position={[-8, -5, -8]} intensity={2.0} color="#c084fc" />
+        {/* Mobile Touch Mode Toggle (prevents scroll-hijacking) */}
+        {isMobile && (
+          <button
+            onClick={() => setTouchInteractive(!touchInteractive)}
+            className={`absolute top-3 right-3 z-20 flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-mono backdrop-blur-md transition ${
+              touchInteractive
+                ? 'bg-amber-500/20 text-amber-300 border border-amber-400/40'
+                : 'bg-black/70 text-slate-300 border border-white/10 hover:text-white'
+            }`}
+          >
+            <Move size={12} />
+            <span>{touchInteractive ? '3D Active (Tap to lock scroll)' : 'Touch to interact 3D'}</span>
+          </button>
+        )}
 
-            <CameraRig />
+        {/* Canvas container: on mobile, if not interactive, allow touch scroll passthrough */}
+        <div className={`h-full w-full ${isMobile && !touchInteractive ? 'pointer-events-none' : 'cursor-grab active:cursor-grabbing'}`}>
+          <Canvas
+            dpr={[1, 1.5]}
+            camera={{ position: [0, 2.2, 7.8], fov: 42 }}
+            gl={{
+              antialias: true,
+              alpha: true,
+              powerPreference: 'high-performance',
+            }}
+          >
+            <Suspense fallback={<FallbackVisual />}>
+              <ambientLight intensity={0.45} />
+              <pointLight position={[0, 0, 0]} intensity={6.5} color="#fbbf24" distance={15} decay={2} />
+              <pointLight position={[8, 5, 8]} intensity={2.2} color="#38bdf8" />
+              <pointLight position={[-8, -5, -8]} intensity={1.8} color="#c084fc" />
 
-            <OrbitControls
-              enableZoom={false}
-              enablePan={false}
-              enableDamping
-              dampingFactor={0.05}
-              rotateSpeed={0.5}
-              minPolarAngle={Math.PI / 4.5}
-              maxPolarAngle={Math.PI / 1.4}
-            />
-          </Suspense>
-        </Canvas>
+              <CameraRig isMobile={isMobile} />
+
+              {/* Orbit controls: enabled on desktop; on mobile only when unlocked */}
+              <OrbitControls
+                enabled={!isMobile || touchInteractive}
+                enableZoom={false}
+                enablePan={false}
+                enableDamping
+                dampingFactor={0.05}
+                rotateSpeed={0.5}
+                minPolarAngle={Math.PI / 4.5}
+                maxPolarAngle={Math.PI / 1.4}
+              />
+            </Suspense>
+          </Canvas>
+        </div>
       </div>
     </SceneErrorBoundary>
   );

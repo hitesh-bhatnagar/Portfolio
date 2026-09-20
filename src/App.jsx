@@ -34,12 +34,12 @@ class AppErrorBoundary extends Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="flex min-h-screen flex-col items-center justify-center bg-[#07090e] p-6 text-white text-center">
-          <div className="h-12 w-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 font-bold mb-4">
+        <div className="flex min-h-screen flex-col items-center justify-center bg-[#06080e] p-6 text-white text-center">
+          <div className="h-12 w-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 font-bold mb-4 font-mono">
             !
           </div>
-          <h1 className="text-2xl font-bold">Something went wrong while rendering</h1>
-          <p className="mt-2 max-w-md text-sm text-slate-400">
+          <h1 className="text-2xl font-bold font-sans">Something went wrong while rendering</h1>
+          <p className="mt-2 max-w-md text-sm text-slate-400 font-sans">
             {this.state.error?.message || 'An unexpected rendering error occurred.'}
           </p>
           <button
@@ -62,20 +62,22 @@ function App() {
 
   return (
     <AppErrorBoundary>
-      <main className="min-h-screen overflow-hidden bg-black text-slate-200 selection:bg-sky-500/30 selection:text-white font-mono antialiased">
+      <div className="relative min-h-screen bg-[#06080e] text-slate-200 selection:bg-sky-500/25 selection:text-white font-sans antialiased">
         <CustomCursor />
         <ScrollProgress />
         <Background />
         <Navbar menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
         {menuOpen && <MobileMenu close={() => setMenuOpen(false)} />}
-        <Hero />
-        <Projects />
-        <CareerTimeline />
-        <Publications />
-        <Skills />
-        <Contact />
+        <main>
+          <Hero />
+          <Projects />
+          <CareerTimeline />
+          <Publications />
+          <Skills />
+          <Contact />
+        </main>
         <Footer />
-      </main>
+      </div>
     </AppErrorBoundary>
   );
 }
